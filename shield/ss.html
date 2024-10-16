@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shield Her - Women's Safety App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+        h1 {
+            color: #d71f1f;
+        }
+        .form-container {
+            display: none;
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            margin: 20px auto;
+            width: 90%;
+            max-width: 400px;
+        }
+        input[type="text"],
+        input[type="tel"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #d71f1f;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #b51212;
+        }
+        .quote {
+            margin: 20px 0;
+            font-size: 1.2em;
+            font-style: italic;
+            color: #555;
+        }
+        .quote-image {
+            width: 50px; /* Adjusted width */
+            height: 50px; /* Adjusted height */
+            border-radius: 10px;
+            margin: 10px 0;
+        }
+        #urgent-button {
+            margin-bottom: 20px;
+            background-color: #e74c3c;
+        }
+    </style>
+    <script>
+        let userDetails = {};
+
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            const fullName = document.getElementById('full-name').value;
+            const mobileNumber = document.getElementById('mobile-number').value;
+            const guardianNumber = document.getElementById('guardian-number').value;
+
+            userDetails = {
+                fullName: fullName,
+                mobileNumber: mobileNumber,
+                guardianNumber: guardianNumber
+            };
+
+            document.getElementById('form-1').style.display = 'none';
+            document.getElementById('form-2').style.display = 'block';
+        }
+
+        function sendUrgentMessage() {
+            fetch('http://localhost:3000/send-sms', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    guardianNumber: userDetails.guardianNumber,
+                    message: `URGENT: Your child ${userDetails.fullName} is in a dangerous situation.`
+                })
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert('Urgent message sent to guardian!');
+                } else {
+                    alert('Failed to send message.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error sending message.');
+            });
+        }
+    </script>
+</head>
+<body>
+    <h1>Shield Her - Women's Safety App</h1>
+
+    <!-- First Form (Login Details) -->
+    <div class="form-container" id="form-1">
+        <form onsubmit="handleFormSubmit(event)">
+            <label for="full-name">Full Name:</label>
+            <input type="text" id="full-name" name="full-name" required>
+
+            <label for="mobile-number">Mobile Number:</label>
+            <input type="tel" id="mobile-number" name="mobile-number" required>
+
+            <label for="guardian-number">Guardian's Number:</label>
+            <input type="tel" id="guardian-number" name="guardian-number" required>
+
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <!-- Second Form (Women's Empowerment) -->
+    <div class="form-container" id="form-2">
+        <button id="urgent-button" onclick="sendUrgentMessage()">Urgent</button>
+        <h2>Women's Empowerment</h2>
+        <div>
+            <img class="quote-image" src="img.1.jpg" alt="Inspirational Image 1">
+            <p class="quote">"The strength of a woman is not measured by the impact that all her hardships have had on her."</p>
+        </div>
+
+        <div>
+            <img class="quote-image" src="img.2.jpg" alt="Inspirational Image 2">
+            <p class="quote">"Empowered women empower women."</p>
+        </div>
+
+        <div>
+            <img class="quote-image" src="img.3.jpg" alt="Inspirational Image 3">
+            <p class="quote">"A woman is the full circle. Within her is the power to create, nurture and transform."</p>
+        </div>
+
+        <div>
+            <img class="quote-image" src="img.4.jpg" alt="Inspirational Image 4">
+            <p class="quote">"You are more powerful than you know; you are beautiful just as you are."</p>
+        </div>
+    </div>
+
+    <script>
+        // Show the first form on page load
+        document.getElementById('form-1').style.display = 'block';
+    </script>
+</body>
+</html>
